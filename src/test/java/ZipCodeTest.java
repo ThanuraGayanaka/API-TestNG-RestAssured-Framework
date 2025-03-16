@@ -1,6 +1,10 @@
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.builder.ResponseBuilder;
+import io.restassured.builder.ResponseSpecBuilder;
+import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import static io.restassured.RestAssured.*;
@@ -9,6 +13,8 @@ import static org.hamcrest.Matchers.*;
 public class ZipCodeTest {
 
     private static  RequestSpecification requestSpec;
+    private static ResponseSpecification responseSpec;
+
 
     @Test(dataProvider = "zipcodes", dataProviderClass = Utility.ZipCodeDataProvider.class)
     public void testZipCode(String country, String zipCode, String expectedCity) {
@@ -30,7 +36,23 @@ public class ZipCodeTest {
     public void CreaterequestSpec(){
 
         requestSpec = new RequestSpecBuilder().
+
                 setBaseUri("https://api.zippopotam.us").build();
+
+
+    }
+
+
+
+    @BeforeClass
+    public void CreateResponeseSepc(){
+        responseSpec = new ResponseSpecBuilder()
+        .expectStatusCode(200) .
+        expectContentType(ContentType.fromContentType("json")) .
+        build() ;
+
+
+
 
 
     }
